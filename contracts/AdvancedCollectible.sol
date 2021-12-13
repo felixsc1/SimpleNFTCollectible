@@ -14,13 +14,15 @@ contract AdvancedCollectible is ERC721, VRFConsumerBase {
         ST_BERNARD
     }
     mapping(uint256 => Breed) public tokenIdToBreed;
-    mapping(uint256 => address) public requestIdToSender;
+    mapping(bytes32 => address) public requestIdToSender;
+    event requestedCollectible(bytes32 indexed requestId, address requester);
+    event breedAssigned(uint256 indexed tokenId, Breed breed);
 
     constructor(
         address _VRFCoordinator,
         address _linkToken,
-        bytes32 keyhash,
-        uint256 fee
+        bytes32 _keyhash,
+        uint256 _fee
     )
         public
         VRFConsumerBase(_VRFCoordinator, _linkToken)
@@ -37,13 +39,29 @@ contract AdvancedCollectible is ERC721, VRFConsumerBase {
     {
         bytes32 requestId = requestRandomness(keyhash, fee);
         requestIdToSender[requestId] = msg.sender;
+        emit requestedCollectible(requestId, msg.sender);
     }
-    
-    function fulfillRandomness(bytes32 requestId, uint256 randomNumber) internal override {
+
+    function fulfillRandomness(bytes32 requestId, uint256 randomNumber)
+        internal
+        override
+    {
         Breed breed = Breed(randomNumber % 3);
         uint256 newTokenId = tokenCounter;
         tokenIdToBreed[newTokenId] = breed;
+        emit breedAssigned(newTokenId, breed);
         address owner = requestIdToSender[requestId];
         _safeMint(owner, newTokenId);
         tokenCounter++;
     }
+
+    function setTokenURI(uint256 tokenId, string memory _tokenURI) public {
+        // we need 3 tokenURIs for pub, shiba, st-bernard
+        // only owner of tokenID should be able to update tokenURI
+        require(
+            _isApprovedOrOwner(_msgSender(), tokenId),
+            "ERC721: Caller is not owner nor approved"
+        );
+        _setTokenURI(tokenId, _tokenURI);
+    }
+}

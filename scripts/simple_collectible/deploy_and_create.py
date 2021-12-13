@@ -1,9 +1,7 @@
-from scripts.helpful_scripts import get_account
+from scripts.helpful_scripts import get_account, OPENSEA_URL
 from brownie import SimpleCollectible
 
 sample_token_uri = "https://ipfs.io/ipfs/Qmd9MCGtdVz2miNumBHDbvj8bigSgTwnr4SbyH6DNnpWdt?filename=0-PUG.json"
-OPENSEA_URL = "https://testnets.opensea.io/assets/{}/{}"
-# two brackets above are for address and tokenID
 
 
 def deploy_and_create():
