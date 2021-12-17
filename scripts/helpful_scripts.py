@@ -5,6 +5,7 @@ FORKED_LOCAL_ENVIRONMENTS = ['mainnet-fork', 'mainnet-fork-dev']
 LOCAL_BLOCKCHAIN_ENVIRONMENTS = ['development', 'local-ganache']
 OPENSEA_URL = "https://testnets.opensea.io/assets/{}/{}"
 
+BREED_MAPPING = {0: "PUG", 1: "SHIBA_INU", 2: "ST_BERNARD"}
 
 contract_to_mock = {"vrf_coordinator": VRFCoordinatorMock,
                     "link_token": LinkToken}
@@ -69,3 +70,8 @@ def fund_with_link(contract_address, account=None, link_token=None, amount=Web3.
     tx.wait(1)
     print("Funded contract!")
     return tx
+
+
+def get_breed(breed_number):
+    # since contract has an enum, where 0, 1, 2 represent dog breeds.
+    return BREED_MAPPING[breed_number]
