@@ -1,4 +1,5 @@
 from brownie import network, config, accounts, LinkToken, VRFCoordinatorMock, Contract
+from web3 import Web3
 
 FORKED_LOCAL_ENVIRONMENTS = ['mainnet-fork', 'mainnet-fork-dev']
 LOCAL_BLOCKCHAIN_ENVIRONMENTS = ['development', 'local-ganache']
@@ -58,3 +59,13 @@ def deploy_mocks():
     link_token = LinkToken.deploy({"from": account})
     VRFCoordinatorMock.deploy(link_token.address, {"from": account})
     print('Deployed!')
+
+
+def fund_with_link(contract_address, account=None, link_token=None, amount=Web3.toWei(0.3, "ether")):
+    # default amount 0.1Link
+    account = account if account else get_account()
+    link_token = link_token if link_token else get_contract("link_token")
+    tx = link_token.transfer(contract_address, amount, {"from": account})
+    tx.wait(1)
+    print("Funded contract!")
+    return tx
