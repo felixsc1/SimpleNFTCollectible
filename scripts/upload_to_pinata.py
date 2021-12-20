@@ -26,6 +26,3 @@ def upload_to_pinata(filepath):
         image_uri = f"https://ipfs.io/ipfs/{ipfs_hash}?filename={filename}"
         print(image_uri)
     return image_uri
-
-# https://ipfs.io/ipfs/QmUPjADFGEKmfohdTaNcWhp7VGk26h5jXDA7v3VtTnTLcW?filename=st-bernard.png
-# https://ipfs.io/ipfs/QmSsYRx3LpDAb1GZQm7zZ1AuHZjfbPkD6J7s9r41xu1mf8?filename=pug.png
